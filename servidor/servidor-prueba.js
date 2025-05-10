@@ -18,7 +18,7 @@ app.use((req, res, next) => {
 
 app.get("/api", (req, res, next) => {
 	const ai = genkit({
-    plugins: [googleAI({ apiKey: "AIzaSyBwaC5jMdyaQ-IWKaaRUnCob0nKZkFZ5mk" })],
+    plugins: [googleAI({ apiKey: "k" })],
     model: gemini20Flash, // Set default model
   });
   //res.json("Hello");
