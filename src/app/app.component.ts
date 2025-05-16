@@ -6,12 +6,13 @@ import { streamFlow } from 'genkit/beta/client';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { PreguntaRespuestaComponent } from "./componentes/pregunta-respuesta/pregunta-respuesta.component";
 
 const url = 'http://localhost:8000/api';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HttpClientModule],
+  imports: [RouterOutlet, HttpClientModule, PreguntaRespuestaComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -28,9 +29,9 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     //this.callFlow();
 
-    this.getServer().subscribe(dataClientes => {
-      console.log("lista clientes"  + dataClientes);
-    })
+    /*this.getServer().subscribe(dataClientes => {
+      console.log("Respuesta: "  + dataClientes);
+    })*/
 
   }
 

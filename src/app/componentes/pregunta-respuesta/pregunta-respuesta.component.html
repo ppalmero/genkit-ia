@@ -1,0 +1,24 @@
+<div class="container">
+  <h1>¡Hazme una pregunta sobre firma digital!</h1>
+
+  <form (ngSubmit)="enviarPregunta()">
+    <div class="form-group">
+      <label for="pregunta">Tu Pregunta:</label>
+      <input type="text" id="pregunta" name="pregunta" [(ngModel)]="pregunta" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!pregunta">Enviar Pregunta</button>
+  </form>
+
+  <div *ngIf="respuesta" class="respuesta-container">
+    <h2>Respuesta:</h2>
+    <p class="respuesta-text">{{ respuesta }}</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <div *ngIf="cargando" class="spinner-border text-primary mt-3" role="status">
+    <span class="visually-hidden">Cargando...</span>
+  </div>
+</div>
