@@ -1,4 +1,4 @@
-<div class="container">
+<!--div class="container">
   <h1>¡Hazme una pregunta sobre firma digital!</h1>
 
   <form (ngSubmit)="enviarPregunta()">
@@ -20,5 +20,30 @@
 
   <div *ngIf="cargando" class="spinner-border text-primary mt-3" role="status">
     <span class="visually-hidden">Cargando...</span>
+  </div>
+</div-->
+
+<div class="container">
+  <h1>¡Conversemos sobre el régimen de licencias!</h1>
+
+  <div class="historial-conversacion">
+    <div *ngFor="let mensaje of historialConversacion" [ngClass]="{'usuario': mensaje.rol === 'Usuario', 'asistente': mensaje.rol === 'Asistente'}">
+      <strong>{{ mensaje.rol }}: </strong> <span [innerHTML]="mensaje.contenido"></span>
+    </div>
+  </div>
+
+  <form (ngSubmit)="enviarPregunta()">
+    <div class="form-group">
+      <label for="pregunta">Tu Mensaje:</label>
+      <input type="text" id="pregunta" name="pregunta" [(ngModel)]="pregunta" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="!pregunta || cargando">Enviar</button>
+    <div *ngIf="cargando" class="spinner-border text-primary ms-2" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </form>
+
+  <div *ngIf="error" class="alert alert-danger mt-3">
+    <strong>Error:</strong> {{ error }}
   </div>
 </div>

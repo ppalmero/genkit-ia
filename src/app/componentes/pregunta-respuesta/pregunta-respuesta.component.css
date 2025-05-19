@@ -81,3 +81,35 @@ label {
   height: 2rem;
   border-width: 0.25em;
 }
+
+/* ... otros estilos ... */
+
+.historial-conversacion {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  height: 300px; /* Ajusta la altura según necesites */
+  overflow-y: auto; /* Para que se pueda hacer scroll si la conversación es larga */
+}
+
+.historial-conversacion .usuario {
+  text-align: right;
+  margin-bottom: 8px;
+  color: #007bff; /* Color para los mensajes del usuario */
+}
+
+.historial-conversacion .asistente {
+  text-align: left;
+  margin-bottom: 8px;
+  color: #28a745; /* Color para los mensajes del asistente */
+}
+
+.historial-conversacion .asistente strong {
+  font-weight: bold; /* Asegura que la negrita se vea */
+}
+
+.historial-conversacion .asistente em {
+  font-style: italic; /* Asegura que la cursiva se vea */
+}

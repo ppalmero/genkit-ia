@@ -1,10 +1,37 @@
 import express from 'express';
+import bodyParser from 'body-parser';
+import fs from 'fs/promises'; // Importa el módulo 'fs/promises' para trabajar con archivos de forma asíncrona
+import path from 'path'; // Importa el módulo 'path' para construir rutas de archivos
+import { fileURLToPath } from 'url'; // Importa fileURLToPath
 
 const app = express();
 const port = process.env.SERVER_PORT || 8000;
 
 import { genkit } from 'genkit';
 import { googleAI, gemini20Flash } from '@genkit-ai/googleai';
+
+const __filename = fileURLToPath(import.meta.url); // Obtiene la ruta del archivo actual
+const __dirname = path.dirname(__filename); // Obtiene la ruta del directorio del archivo actual
+
+const conversaciones = {};
+//const promptInicialAsistente = "¡Hola! Soy tu guía virtual en San Luis. ¿Qué te gustaría saber o hacer hoy por aquí?";
+let promptInicialAsistente = ""; // Variable para almacenar el prompt inicial
+
+async function cargarPromptInicial() {
+  try {
+    const filePath = path.join(__dirname, 'prompt_licencias.txt'); // Construye la ruta al archivo
+    promptInicialAsistente = await fs.readFile(filePath, 'utf-8'); // Lee el contenido del archivo
+    console.log('Prompt inicial cargado:'/*, promptInicialAsistente*/);
+  } catch (error) {
+    console.error('Error al cargar el prompt inicial:', error);
+    promptInicialAsistente = "¡Hola! ¿En qué puedo ayudarte hoy?"; // Mensaje por defecto en caso de error
+  }
+}
+
+// Cargar el prompt inicial al iniciar el servidor
+cargarPromptInicial();
+
+app.use(bodyParser.json());
 
 // Add Access Control Allow Origin headers
 app.use((req, res, next) => {
@@ -16,7 +43,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api", (req, res, next) => {
+/*app.get("/api", (req, res, next) => {
 	const ai = genkit({
     plugins: [googleAI({ apiKey: "k" })],
     model: gemini20Flash, // Set default model
@@ -54,5 +81,39 @@ app.get("/api", (req, res, next) => {
       .then(({ text }) => res.json(text))
       .catch(next);
   });
+  */
+
+app.post("/api/conversacion/:userId", async (req, res, next) => {
+  const ai = genkit({
+    plugins: [googleAI({ apiKey: "k" })],
+    model: gemini20Flash,
+  });
+
+  const userId = req.params.userId;
+  const nuevaPregunta = req.body.pregunta;
+
+  if (!userId || !nuevaPregunta) {
+    return res.status(400).json({ error: 'El ID de usuario y la pregunta son obligatorios.' });
+  }
+
+  if (!conversaciones[userId]) {
+    conversaciones[userId] = [{ rol: 'Asistente', contenido: promptInicialAsistente }];
+  }
+
+  const historial = conversaciones[userId];
+  historial.push({ rol: 'Usuario', contenido: nuevaPregunta });
+
+  const contextoHistorial = historial.map(msg => `${msg.rol}: ${msg.contenido}`).join('\n');
+  const prompt = `${contextoHistorial}\nAsistente:`;
+
+  try {
+    const { text } = await ai.generate(prompt);
+    const respuesta = { rol: 'Asistente', contenido: text };
+    historial.push(respuesta);
+    res.json({ respuesta: respuesta.contenido });
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

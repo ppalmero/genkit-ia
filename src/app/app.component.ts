@@ -12,7 +12,7 @@ const url = 'http://localhost:8000/api';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HttpClientModule, PreguntaRespuestaComponent],
+  imports: [HttpClientModule, PreguntaRespuestaComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
