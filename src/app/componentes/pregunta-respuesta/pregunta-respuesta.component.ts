@@ -2,7 +2,7 @@ import { Component, SecurityContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 
 const url = 'http://localhost:8000/api';
@@ -26,7 +26,7 @@ export class PreguntaRespuestaComponent {
   respuesta: string = '';
   error: string = '';
   cargando: boolean = false;
-  userId: string = 'usuario-temporal-1'; // ¡En una app real, esto sería una sesión o ID único!
+  userId: string = 'usuario-temporal-' + (Math.random() * 1000.0) / 10; // ¡En una app real, esto sería una sesión o ID único!
 
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
     // Podrías cargar el historial existente al inicializar el componente
@@ -53,7 +53,7 @@ export class PreguntaRespuestaComponent {
     const payload = { pregunta: this.pregunta };
 
     try {
-      const response: any = await this.http.post(apiUrl, payload).toPromise();
+      const response: any = await firstValueFrom(this.http.post(apiUrl, payload));//.toPromise();
       this.respuesta = this.interpretarMarkdown(response.respuesta);
       this.historialConversacion.push({ rol: 'Asistente', contenido: this.respuesta });
       this.pregunta = '';

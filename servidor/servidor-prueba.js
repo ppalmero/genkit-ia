@@ -97,7 +97,7 @@ app.post("/api/conversacion/:userId", async (req, res, next) => {
   }
 
   if (!conversaciones[userId]) {
-    conversaciones[userId] = [{ rol: 'Asistente', contenido: promptInicialAsistente }];
+    conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema: " + promptInicialAsistente }];
   }
 
   const historial = conversaciones[userId];
