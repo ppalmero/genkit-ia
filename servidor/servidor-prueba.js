@@ -19,7 +19,7 @@ let promptInicialAsistente = ""; // Variable para almacenar el prompt inicial
 
 async function cargarPromptInicial() {
   try {
-    const filePath = path.join(__dirname, 'prompt_licencias.txt'); // Construye la ruta al archivo
+    const filePath = path.join(__dirname, 'prompt_contenedores.txt'); // Construye la ruta al archivo
     promptInicialAsistente = await fs.readFile(filePath, 'utf-8'); // Lee el contenido del archivo
     console.log('Prompt inicial cargado:'/*, promptInicialAsistente*/);
   } catch (error) {
@@ -97,7 +97,9 @@ app.post("/api/conversacion/:userId", async (req, res, next) => {
   }
 
   if (!conversaciones[userId]) {
-    conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema: " + promptInicialAsistente }];
+    conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
+      "Son preguntas y respuestas sobre el servicio de contenedores que ofreces como empresa radicada en san luis argentina con dirección en calle Santa Fé 354 que se dedica al alquiler de contenedores, desde ahí deberás hacer los cálculos de distancias en kilómetros según las direcciones que te pasen los usuarios" + 
+      "Una vez que tengas toda la información para la contratación de un contenedor (debes saber la dirección donde el usuario quiere el contenedor y la cantidad de días que lo necesita) escribe 'Consultando precios': " + promptInicialAsistente }];
   }
 
   const historial = conversaciones[userId];
