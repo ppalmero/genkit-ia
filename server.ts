@@ -43,7 +43,7 @@ export function app(): express.Express {
   });
   // Initialize Genkit
   const ai = genkit({
-    plugins: [googleAI({ apiKey: "AIzaSyBwaC5jMdyaQ-IWKaaRUnCob0nKZkFZ5mk" })],
+    plugins: [googleAI({ apiKey: "k" })],
     model: gemini20Flash, // Set default model
   });
 

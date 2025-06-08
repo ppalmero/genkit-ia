@@ -49,7 +49,8 @@ export class PreguntaRespuestaComponent {
 
     this.historialConversacion.push({ rol: 'Usuario', contenido: this.pregunta });
 
-    const apiUrl = `http://localhost:8000/api/conversacion/${this.userId}`;
+    const apiUrl = `http://45.90.220.197:8001/api/conversacion/${this.userId}`;//PARA SERVIDOR
+    //const apiUrl = `http://localhost:8001/api/conversacion/${this.userId}`;//PARA LOCAL
     const payload = { pregunta: this.pregunta };
 
     try {

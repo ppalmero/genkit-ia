@@ -1,11 +1,22 @@
+import fetch, { Response, Headers, Request } from 'node-fetch';
+
+if (typeof globalThis.fetch === 'undefined') {
+  globalThis.fetch = fetch;
+  globalThis.Response = Response;
+  globalThis.Headers = Headers;
+  globalThis.Request = Request;
+}
+
+// LO ANTERIOR AGREGADO POR ERRORES EN EL SERVIDOR TASEMAR, PROBABLE NODE DESACTUALIZADO
 import express from 'express';
 import bodyParser from 'body-parser';
 import fs from 'fs/promises'; // Importa el módulo 'fs/promises' para trabajar con archivos de forma asíncrona
 import path from 'path'; // Importa el módulo 'path' para construir rutas de archivos
 import { fileURLToPath } from 'url'; // Importa fileURLToPath
+import cors from 'cors'; // Importa el paquete PARA SERVIDOR TASEMAR
 
 const app = express();
-const port = process.env.SERVER_PORT || 8000;
+const port = process.env.SERVER_PORT || 8001;
 
 import { genkit } from 'genkit';
 import { googleAI, gemini20Flash } from '@genkit-ai/googleai';
@@ -19,7 +30,7 @@ let promptInicialAsistente = ""; // Variable para almacenar el prompt inicial
 
 async function cargarPromptInicial() {
   try {
-    const filePath = path.join(__dirname, 'prompt_expediente_electronico.txt'); // Construye la ruta al archivo
+    const filePath = path.join(__dirname, 'prompt_contenedores.txt'); // Construye la ruta al archivo
     promptInicialAsistente = await fs.readFile(filePath, 'utf-8'); // Lee el contenido del archivo
     console.log('Prompt inicial cargado:'/*, promptInicialAsistente*/);
   } catch (error) {
@@ -33,15 +44,22 @@ cargarPromptInicial();
 
 app.use(bodyParser.json());
 
-// Add Access Control Allow Origin headers
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+// Add Access Control Allow Origin headers CAMBIO POR CORS SERVIDOR TASEMAR
+/*app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://45.90.220.197:3002");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
-});
+});*/
+
+app.use(cors({
+    origin: 'http://45.90.220.197:3002', // Solo permite este origen
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Permite los métodos que usas
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'], // Las cabeceras que el cliente puede enviar
+    credentials: true // Si tu cliente necesita enviar cookies o tokens de auth
+}));
 
 /*app.get("/api", (req, res, next) => {
 	const ai = genkit({
@@ -97,11 +115,11 @@ app.post("/api/conversacion/:userId", async (req, res, next) => {
   }
 
   if (!conversaciones[userId]) {
-    /*conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
+    conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
       "Son preguntas y respuestas sobre el servicio de contenedores que ofreces como empresa radicada en san luis argentina con dirección en calle Santa Fé 354 que se dedica al alquiler de contenedores, desde ahí deberás hacer los cálculos de distancias en kilómetros según las direcciones que te pasen los usuarios" + 
-      "Una vez que tengas toda la información para la contratación de un contenedor (debes saber la dirección donde el usuario quiere el contenedor y la cantidad de días que lo necesita) escribe 'Consultando precios': " + promptInicialAsistente }];*/
-      conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
-        promptInicialAsistente }];
+      "Una vez que tengas toda la información para la contratación de un contenedor (debes saber la dirección donde el usuario quiere el contenedor y la cantidad de días que lo necesita) escribe 'Consultando precios': " + promptInicialAsistente }];
+      /*conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
+        promptInicialAsistente }];*/
   }
 
   const historial = conversaciones[userId];
