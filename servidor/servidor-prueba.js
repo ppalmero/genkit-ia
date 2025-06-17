@@ -115,9 +115,10 @@ app.post("/api/conversacion/:userId", async (req, res, next) => {
   }
 
   if (!conversaciones[userId]) {
-    conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
-      "Son preguntas y respuestas sobre el servicio de contenedores que ofreces como empresa radicada en san luis argentina con dirección en calle Santa Fé 354 que se dedica al alquiler de contenedores, desde ahí deberás hacer los cálculos de distancias en kilómetros según las direcciones que te pasen los usuarios" + 
-      "Una vez que tengas toda la información para la contratación de un contenedor (debes saber la dirección donde el usuario quiere el contenedor y la cantidad de días que lo necesita) escribe 'Consultando precios': " + promptInicialAsistente }];
+    conversaciones[userId] = [{ rol: 'Asistente', contenido: "Saluda cordialmente con una bienvenida. Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
+      "Son preguntas y respuestas sobre el servicio de contenedores que ofreces como empresa radicada en san luis argentina con dirección en calle Santa Fé 354 que se dedica al alquiler de contenedores, desde ahí deberás hacer los cálculos de distancias en kilómetros según las direcciones que te pasen los usuarios " + 
+      "Una vez que tengas toda la información para la contratación de un contenedor (debes saber la dirección donde el usuario quiere el contenedor y la cantidad de días que lo necesita) solicita un número de teléfono o correo electrónico para enviar el presupuesto, en cuanto lo tengas, saluda cordialmente diciendo que se enviará " +
+      "el presupuesto por el método de contacto que te hayan propuesto: " + promptInicialAsistente }];
       /*conversaciones[userId] = [{ rol: 'Asistente', contenido: "Solamente puedes contestar sobre esto que sigue, en caso que no puedas responder di que no estás preparado para contestar sobre ese tema. " + 
         promptInicialAsistente }];*/
   }
